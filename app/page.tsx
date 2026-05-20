@@ -32,18 +32,9 @@ function SectionHeader({ index, title }: { index: string; title: string }) {
 
 export default function TypographyShowcase() {
   return (
-    <div className="min-h-screen bg-[var(--color-paper)]">
+    <div className="bg-[var(--color-paper)]">
 
-      {/* ── Header ── */}
-      <header className="border-b border-[var(--color-border)] px-12 py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-5 h-5 border border-[var(--color-gold)] rotate-45" />
-          <Label className="text-[var(--color-ink)]">Meridian</Label>
-        </div>
-        <Caption>Typography System · v1.0</Caption>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-12 py-20 space-y-20">
+      <div className="max-w-4xl mx-auto px-4 md:px-container py-20 space-y-20">
 
         {/* ── Display Hero ── */}
         <section className="relative">
@@ -534,15 +525,7 @@ export default function TypographyShowcase() {
           </div>
         </section>
 
-      </main>
-
-      {/* ── Footer ── */}
-      <footer className="border-t border-[var(--color-border)] px-12 py-6 flex items-center justify-between mt-20">
-        <Caption>Meridian Estates · Design System · 2026</Caption>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 border border-[var(--color-gold)] rotate-45" />
-        </div>
-      </footer>
+      </div>
 
     </div>
   )

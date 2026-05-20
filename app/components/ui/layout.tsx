@@ -7,7 +7,7 @@ function cn(...classes: (string | undefined | null | false)[]) {
 export function Container({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   return (
     <div
-      className={cn("max-w-4xl mx-auto px-container w-full", className)}
+      className={cn("max-w-4xl mx-auto px-4 md:px-container w-full", className)}
       {...props}
     />
   )
