@@ -286,6 +286,105 @@ export default function TypographyShowcase() {
           </div>
         </section>
 
+        <Divider />
+
+        {/* ── Spacing System ── */}
+        <section>
+          <SectionHeader index="05" title="Spacing System" />
+
+          {/* Tier 1 — Primitives */}
+          <div className="mb-10">
+            <Caption className="block mb-4">Tier 1 — Primitives · 4pt grid</Caption>
+            <div className="space-y-2">
+              {[
+                { token: "--space-1",  label: "space-1",  px: "4px",   rem: "0.25rem", w: 4   },
+                { token: "--space-2",  label: "space-2",  px: "8px",   rem: "0.5rem",  w: 8   },
+                { token: "--space-3",  label: "space-3",  px: "12px",  rem: "0.75rem", w: 12  },
+                { token: "--space-4",  label: "space-4",  px: "16px",  rem: "1rem",    w: 16  },
+                { token: "--space-5",  label: "space-5",  px: "20px",  rem: "1.25rem", w: 20  },
+                { token: "--space-6",  label: "space-6",  px: "24px",  rem: "1.5rem",  w: 24  },
+                { token: "--space-8",  label: "space-8",  px: "32px",  rem: "2rem",    w: 32  },
+                { token: "--space-10", label: "space-10", px: "40px",  rem: "2.5rem",  w: 40  },
+                { token: "--space-12", label: "space-12", px: "48px",  rem: "3rem",    w: 48  },
+                { token: "--space-16", label: "space-16", px: "64px",  rem: "4rem",    w: 64  },
+                { token: "--space-20", label: "space-20", px: "80px",  rem: "5rem",    w: 80  },
+                { token: "--space-24", label: "space-24", px: "96px",  rem: "6rem",    w: 96  },
+                { token: "--space-32", label: "space-32", px: "128px", rem: "8rem",    w: 128 },
+              ].map(({ token, label, px, rem, w }) => (
+                <div key={token} className="flex items-center gap-4">
+                  <div className="w-28 shrink-0">
+                    <Label className="text-[var(--color-ink-subtle)]">{label}</Label>
+                  </div>
+                  <div
+                    className="h-5 bg-[var(--color-gold)] shrink-0"
+                    style={{ width: w }}
+                  />
+                  <Caption>{px} · {rem}</Caption>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tier 2 — Semantic aliases */}
+          <div className="mb-10 p-6 bg-[var(--color-paper-alt)] border border-[var(--color-border)]">
+            <Caption className="block mb-5">Tier 2 — Semantic aliases</Caption>
+            <div className="grid grid-cols-7 gap-3 text-center">
+              {[
+                { alias: "xs",  val: "8px",   ref: "space-2"  },
+                { alias: "sm",  val: "16px",  ref: "space-4"  },
+                { alias: "md",  val: "24px",  ref: "space-6"  },
+                { alias: "lg",  val: "40px",  ref: "space-10" },
+                { alias: "xl",  val: "64px",  ref: "space-16" },
+                { alias: "2xl", val: "96px",  ref: "space-24" },
+                { alias: "3xl", val: "128px", ref: "space-32" },
+              ].map(({ alias, val, ref }) => (
+                <div key={alias} className="flex flex-col items-center gap-2">
+                  <div
+                    className="w-full bg-[var(--color-gold-light)]"
+                    style={{ height: `var(--space-${alias})`, maxHeight: "8rem" }}
+                  />
+                  <Label className="text-[var(--color-ink)]">{alias}</Label>
+                  <Caption>{val}</Caption>
+                  <Caption className="text-[var(--color-gold)]">→ {ref}</Caption>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tier 3 — Layout tokens */}
+          <div>
+            <Caption className="block mb-5">Tier 3 — Layout tokens</Caption>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { token: "section",   val: "80px",  role: "Vertical section padding",     cls: "py-section"   },
+                { token: "container", val: "48px",  role: "Horizontal page padding",      cls: "px-container" },
+                { token: "card",      val: "32px",  role: "Card internal padding",         cls: "p-card"       },
+                { token: "gutter",    val: "24px",  role: "Grid / flex gap",              cls: "gap-gutter"   },
+                { token: "stack",     val: "16px",  role: "Adjacent element stacking",    cls: "mt-stack"     },
+                { token: "inline",    val: "8px",   role: "Inline element separation",    cls: "gap-inline"   },
+              ].map(({ token, val, role, cls }) => (
+                <div
+                  key={token}
+                  className="flex items-center gap-4 p-4 border border-[var(--color-border)] bg-white"
+                >
+                  <div
+                    className="shrink-0 bg-[var(--color-gold)]/20 border border-[var(--color-gold)]/40 flex items-center justify-center"
+                    style={{ width: `var(--space-${token})`, height: "2.5rem", minWidth: "0.5rem", maxWidth: "5rem" }}
+                  />
+                  <div className="min-w-0">
+                    <div className="flex items-baseline gap-2 mb-0.5">
+                      <Label className="text-[var(--color-ink)]">{token}</Label>
+                      <Caption>{val}</Caption>
+                    </div>
+                    <Caption className="block text-[var(--color-ink-muted)]">{role}</Caption>
+                    <Caption className="block text-[var(--color-gold)] font-mono mt-0.5">{cls}</Caption>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
       </main>
 
       {/* ── Footer ── */}

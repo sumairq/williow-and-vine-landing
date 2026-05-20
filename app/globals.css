@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Colors */
   --color-ink:        #1A1917;
   --color-ink-muted:  #6B6966;
   --color-ink-subtle: #9C9894;
@@ -9,12 +10,60 @@
   --color-gold:       #B8985A;
   --color-gold-light: #D4B97A;
   --color-border:     #E3DFDA;
+
+  /* Spacing — Tier 1: Primitives (4pt grid) */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Spacing — Tier 2: Semantic aliases (t-shirt sizes) */
+  --space-xs:  var(--space-2);
+  --space-sm:  var(--space-4);
+  --space-md:  var(--space-6);
+  --space-lg:  var(--space-10);
+  --space-xl:  var(--space-16);
+  --space-2xl: var(--space-24);
+  --space-3xl: var(--space-32);
+
+  /* Spacing — Tier 3: Layout tokens (named by role) */
+  --space-section:   var(--space-20);
+  --space-container: var(--space-12);
+  --space-card:      var(--space-8);
+  --space-gutter:    var(--space-6);
+  --space-stack:     var(--space-4);
+  --space-inline:    var(--space-2);
 }
 
 @theme inline {
+  /* Fonts */
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-sans:    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono:    var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Spacing — Tailwind utilities (px-container, py-section, gap-gutter, etc.) */
+  --spacing-xs:        var(--space-xs);
+  --spacing-sm:        var(--space-sm);
+  --spacing-md:        var(--space-md);
+  --spacing-lg:        var(--space-lg);
+  --spacing-xl:        var(--space-xl);
+  --spacing-2xl:       var(--space-2xl);
+  --spacing-3xl:       var(--space-3xl);
+  --spacing-section:   var(--space-section);
+  --spacing-container: var(--space-container);
+  --spacing-card:      var(--space-card);
+  --spacing-gutter:    var(--space-gutter);
+  --spacing-stack:     var(--space-stack);
+  --spacing-inline:    var(--space-inline);
 }
 
 body {
