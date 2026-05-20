@@ -1,0 +1,12 @@
+{
+  "name": "willow-and-vine-realty",
+  "version": "1.0.0",
+  "description": "Real Estate website",
+  "license": "ISC",
+  "author": "Sumair Qaisar",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
