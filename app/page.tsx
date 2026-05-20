@@ -4,6 +4,9 @@ import {
   BodyLarge, Body, BodySmall,
   Caption, Label, Overline,
 } from "@/app/components/ui/typography"
+import { Container, Section, Stack, Inline, Grid } from "@/app/components/ui/layout"
+import { Button } from "@/app/components/ui/button"
+import { PropertyCard } from "@/app/components/ui/property-card"
 
 function Divider() {
   return (
@@ -385,11 +388,157 @@ export default function TypographyShowcase() {
           </div>
         </section>
 
+        <Divider />
+
+        {/* ── Layout Primitives ── */}
+        <section>
+          <SectionHeader index="06" title="Layout Primitives" />
+
+          <Stack className="gap-8">
+            {/* Container */}
+            <div>
+              <Caption className="block mb-3">Container · max-w-4xl mx-auto px-container</Caption>
+              <div className="border border-dashed border-[var(--color-border)] p-1">
+                <Container className="bg-[var(--color-paper-alt)] py-4">
+                  <Caption className="text-center block text-[var(--color-gold)]">
+                    Container — constrained width, horizontal padding
+                  </Caption>
+                </Container>
+              </div>
+            </div>
+
+            <div className="h-px bg-[var(--color-border)]" />
+
+            {/* Stack */}
+            <div>
+              <Caption className="block mb-3">Stack · flex-col gap-stack (16px)</Caption>
+              <Stack className="max-w-xs">
+                {["First item", "Second item", "Third item"].map((t) => (
+                  <div key={t} className="bg-[var(--color-paper-alt)] border border-[var(--color-border)] px-4 py-3">
+                    <Caption>{t}</Caption>
+                  </div>
+                ))}
+              </Stack>
+            </div>
+
+            <div className="h-px bg-[var(--color-border)]" />
+
+            {/* Inline */}
+            <div>
+              <Caption className="block mb-3">Inline · flex-row items-center gap-inline (8px)</Caption>
+              <Inline>
+                {["Alpha", "Beta", "Gamma", "Delta"].map((t) => (
+                  <div key={t} className="bg-[var(--color-paper-alt)] border border-[var(--color-border)] px-4 py-2">
+                    <Caption>{t}</Caption>
+                  </div>
+                ))}
+              </Inline>
+            </div>
+
+            <div className="h-px bg-[var(--color-border)]" />
+
+            {/* Grid */}
+            <div>
+              <Caption className="block mb-3">Grid · 1→2→3 cols, gap-gutter (24px)</Caption>
+              <Grid>
+                {["One", "Two", "Three", "Four", "Five", "Six"].map((t) => (
+                  <div key={t} className="bg-[var(--color-paper-alt)] border border-[var(--color-border)] px-4 py-6 text-center">
+                    <Caption>{t}</Caption>
+                  </div>
+                ))}
+              </Grid>
+            </div>
+          </Stack>
+        </section>
+
+        <Divider />
+
+        {/* ── Button ── */}
+        <section>
+          <SectionHeader index="07" title="Button" />
+
+          <Stack className="gap-8">
+            {(["primary", "outline", "ghost", "gold"] as const).map((variant) => (
+              <div key={variant}>
+                <Caption className="block mb-3 capitalize">{variant}</Caption>
+                <Inline className="flex-wrap gap-3">
+                  {(["sm", "md", "lg"] as const).map((size) => (
+                    <Button key={size} variant={variant} size={size}>
+                      {size === "sm" ? "Small" : size === "md" ? "Medium" : "Large"}
+                    </Button>
+                  ))}
+                </Inline>
+              </div>
+            ))}
+
+            <div className="h-px bg-[var(--color-border)]" />
+
+            {/* In-context button usage */}
+            <div>
+              <Caption className="block mb-4">In context</Caption>
+              <div className="flex flex-wrap gap-3">
+                <Button variant="primary">Request Viewing</Button>
+                <Button variant="outline">Download Brochure</Button>
+                <Button variant="ghost">Learn More</Button>
+                <Button variant="gold" size="lg">Book Private Tour</Button>
+              </div>
+            </div>
+          </Stack>
+        </section>
+
+        <Divider />
+
+        {/* ── Property Card ── */}
+        <section>
+          <SectionHeader index="08" title="Property Card" />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+            <PropertyCard
+              property={{
+                ref: "REF 2026-0041",
+                status: "Off Market · Private Sale",
+                name: "Harrington House",
+                location: "Chiltern Hills, Buckinghamshire",
+                description:
+                  "An exceptional Grade I listed manor house of unparalleled provenance, set within 42 acres of formal gardens and parkland. Six principal bedroom suites, a ballroom, and a private lake.",
+                price: "£18.5M",
+                specs: [
+                  { label: "Type",       value: "Manor House"   },
+                  { label: "Bedrooms",   value: "6 Principal"   },
+                  { label: "Reception",  value: "4 Rooms"       },
+                  { label: "Grounds",    value: "42 Acres"      },
+                ],
+                imageGradient:
+                  "linear-gradient(135deg, #E8E4DF 0%, #D4C9BC 50%, #C4B9AC 100%)",
+              }}
+            />
+            <PropertyCard
+              property={{
+                ref: "REF 2026-0057",
+                status: "New Instruction",
+                name: "Ashwood Pavilion",
+                location: "Richmond Hill, Surrey",
+                description:
+                  "A modern masterwork of glass and reclaimed stone perched above the Thames. Designed by a RIBA award-winning practice, the three-storey residence offers unobstructed river views from every principal room.",
+                price: "£6.75M",
+                specs: [
+                  { label: "Type",       value: "Detached"      },
+                  { label: "Bedrooms",   value: "5"             },
+                  { label: "Bathrooms",  value: "4 En-suite"    },
+                  { label: "EPC",        value: "Rating B"      },
+                ],
+                imageGradient:
+                  "linear-gradient(135deg, #D8E4E8 0%, #B8CDD4 50%, #98B4BE 100%)",
+              }}
+            />
+          </div>
+        </section>
+
       </main>
 
       {/* ── Footer ── */}
       <footer className="border-t border-[var(--color-border)] px-12 py-6 flex items-center justify-between mt-20">
-        <Caption>Meridian Estates · Typography System · 2026</Caption>
+        <Caption>Meridian Estates · Design System · 2026</Caption>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 border border-[var(--color-gold)] rotate-45" />
         </div>
