@@ -16,6 +16,7 @@ Luxury real estate website built section by section. Brand name: **Meridian Esta
 | Runtime | React | 19.2.4 |
 | Language | TypeScript | ^5 |
 | Styling | Tailwind CSS v4 (CSS-first, no config file) | ^4 |
+| Charts | Recharts (client-only, used on `/about`) | ^3.8 |
 | Package manager | pnpm | — |
 | Dev server | Turbopack (`next dev`) | — |
 
@@ -31,21 +32,37 @@ app/
   layout.tsx                       # Root layout: fonts, Navbar, Footer, <main>
   page.tsx                         # Homepage (composes sections in order)
   design-system/page.tsx           # Design system showcase route
+
   properties/
-    page.tsx                       # /properties — sidebar filters + 3-col listing grid
+    page.tsx                       # /properties — hero band + sidebar filters + 3-col listing grid
     _components/
       FiltersSidebar.tsx           # Location + Listing filters (private to route)
 
+  locations/
+    page.tsx                       # /locations — hero band + 3-col grid of all 12 regions
+    [slug]/page.tsx                # /locations/<slug> — per-region detail (hero, about, highlights, listings, more)
+
+  about/
+    page.tsx                       # /about — hero, story, metrics, donut chart, leadership, values
+    _components/
+      PortfolioDonut.tsx           # Recharts donut + custom legend (client component)
+
+  contact/
+    page.tsx                       # /contact — full-bleed overlay, headline left, form right (client)
+
   data/
-    properties.ts                  # Shared Property type + PROPERTIES array (used by /properties and PropertiesSection)
+    properties.ts                  # PROPERTIES + Property/PropertyStatus/PropertyType/PropertyCountry
+    regions.ts                     # REGIONS array — 12 regions used by /locations + PopularRegionsSection
+    about.ts                       # METRICS, PORTFOLIO_BY_COUNTRY, LEADERSHIP, VALUES (+ PORTFOLIO_TOTAL)
 
   components/
     ui/
       typography.tsx               # All text primitives
       button.tsx                   # Button component
       layout.tsx                   # Container, Section, Stack, Inline, Grid
-      property-card.tsx            # Specs-grid card with gradient placeholder (unused in sections)
-      listing-card.tsx             # Image-led listing card — shared by /properties and PropertiesSection
+      property-card.tsx            # Specs-grid card with gradient placeholder (legacy, design-system only)
+      listing-card.tsx             # Image-led listing card — shared by /properties, /locations/[slug], PropertiesSection
+      region-card.tsx              # Destination card with image + gradient + Learn More — used by /locations + /locations/[slug] "Other destinations"
     layout/
       Navbar.tsx                   # Fixed, scroll-aware, transparent-on-hero
       Footer.tsx                   # 4-col grid, brand + link columns
@@ -53,7 +70,7 @@ app/
       HeroSection.tsx              # Full-viewport hero with search bar
       FeaturedPropertiesSection.tsx # Asymmetric 2×2 featured grid
       PropertiesSection.tsx        # 4-col × 2-row browse grid + View More button
-      PopularRegionsSection.tsx    # 3-col × 2-row destination cards with overlay
+      PopularRegionsSection.tsx    # 3-col × 2-row destination cards with overlay (inline card; links to /locations/<slug>)
       BlogSection.tsx              # Journal: large post (left) + 3 horizontal posts (right)
       TestimonialsSection.tsx      # Carousel: quote cards with portrait image + fade transition
 
@@ -136,7 +153,10 @@ All: `font-sans font-semibold uppercase tracking-widest transition-colors`
 Specs-grid card with gradient placeholder image. Props: `ref`, `status`, `name`, `location`, `description`, `price`, `specs[]`, `imageGradient?`. Uses `outline` button + `H3/H5/Body/Label/BodySmall`. **Currently unused — kept around for the design-system showcase.** New listing pages should use `ListingCard` instead.
 
 ### `ListingCard` (`app/components/ui/listing-card.tsx`)
-Image-led listing card used by both `PropertiesSection` and the `/properties` page. Props: `property: Property` (from `@/app/data/properties`). Structure: `next/image fill` thumbnail (`h-44`) with hover zoom + colour-coded status badge overlay, then `H5` name, location `Caption`, beds/size `Label`+`BodySmall` row, `H4` price. Status colours come from a local `STATUS_COLOURS` record keyed by `PropertyStatus`.
+Image-led listing card used by `PropertiesSection`, the `/properties` page, and the featured-listings strip on `/locations/[slug]`. Props: `property: Property` (from `@/app/data/properties`). Structure: `next/image fill` thumbnail (`h-44`) with hover zoom + colour-coded status badge overlay, then `H5` name, location `Caption`, beds/size `Label`+`BodySmall` row, `H4` price. Status colours come from a local `STATUS_COLOURS` record keyed by `PropertyStatus`.
+
+### `RegionCard` (`app/components/ui/region-card.tsx`)
+Destination card. Props: `region: Region` (from `@/app/data/regions`) + optional `className` to override the default `h-[260px] lg:h-[400px]` sizing. Structure: `<a href="/locations/{slug}">` wrapping `next/image fill` with hover zoom, bottom-heavy gradient overlay (deepens on hover), and a content stack of `Caption {country} · {count} properties` + `H3 {name}` + ghost "Learn More" pill that fills white on hover. Used on `/locations` index and the "Other destinations" footer of `/locations/[slug]`. `PopularRegionsSection` uses an *inline* copy of this design (slightly different sizing for its asymmetric grid) — keep both visually consistent if either is edited.
 
 ### Layout primitives (`app/components/ui/layout.tsx`)
 - `Container`: `max-w-4xl mx-auto px-4 md:px-container w-full`
@@ -254,21 +274,73 @@ Composes the homepage sections in the order listed below.
 - `CheckboxGroup` renders a `<fieldset>` with a `<legend>` styled like an Overline + stacked `<label>` rows. Native checkboxes use `accent-[var(--color-gold)]` for the check colour
 - Footer: text-only "Reset filters" `<button type="reset">` (no handler)
 
+### `/locations` (`app/locations/page.tsx`)
+- Server component. Page background `--color-paper`
+- **Hero band**: same `-mt-16` overlay pattern as `/properties`, with an Unsplash background, dark gradient, gold `Overline` "Where We Operate" and white `H1 "Locations"` aligned bottom-left in the content panel
+- **Region grid**: `max-w-7xl mx-auto px-4 md:px-container py-section` containing a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter` of all 12 `<RegionCard>`s
+
+### `/locations/[slug]` (`app/locations/[slug]/page.tsx`)
+- Server component. Uses `generateStaticParams()` over `REGIONS` so all 12 detail pages prerender at build time. `params` is a `Promise<{ slug: string }>` per Next 16 App Router; await it inside the page. Unknown slugs call `notFound()` from `next/navigation`
+- Section stack (top to bottom):
+  1. **Hero band** — region image + Overline `{country}` + white `H1 {name}` + `Caption {propertiesCount} properties`
+  2. **About** — 12-col split: left `col-span-4` tagline H2, right `col-span-7 col-start-6` two `<Body>` paragraphs from `region.about`
+  3. **Highlights** — `--color-paper-alt`. Numbered (`01`/`02`/`03` gold `Label`) `H5` cards in 3-col grid
+  4. **Featured listings** — filters `PROPERTIES` by `country === region.country`, shows up to 3 `<ListingCard>`s. If zero matches, shows a muted "No listings are currently published…" panel with a "Register interest" link to `/contact`
+  5. **Discover more** — 3 other `<RegionCard>`s, biased to same country first, then fill from other countries
+
+### `/about` (`app/about/page.tsx`)
+- Server component, but embeds a single client island (`<PortfolioDonut>`)
+- Sections (top to bottom): hero band → story (12-col split) → metrics → portfolio donut card → leadership grid → values strip
+- **Metrics**: 4 cards in `grid-cols-2 lg:grid-cols-4 gap-gutter`, each rendering `<Display>{value}</Display>` + `<Label>{label}</Label>` + optional `<Caption>{caption}</Caption>` from `METRICS`
+- **Portfolio donut card**: white framing card (`bg-white border p-card md:p-10`) wrapping `<PortfolioDonut>` plus a `<Caption>` footnote citing `{PORTFOLIO_TOTAL} active listings, May 2026`. Heading uses `text-balance` and **no** narrow `max-w-2xl` wrapper — see "Width-constraint anti-pattern" below
+- **Leadership**: 4 cards (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`) with a `next/image fill` portrait in an `aspect-[4/5]` container, `object-top grayscale`, then `H5` name + gold Overline role + `BodySmall` bio
+- **Values**: 3-col grid, each with numbered gold `Label` + `H5` title + `BodySmall` body, separated by `border-t pt-6`
+
+### `PortfolioDonut` (`app/about/_components/PortfolioDonut.tsx`) — `"use client"`
+Recharts donut + custom legend. Uses brand **hex** values (`#B8985A`, `#1A1917`, `#6B6966`, `#D4B97A`, `#9C9894`) for the five `Cell`s — Recharts passes the colour straight to SVG `fill`, so a hex string is safest. Layout: 12-col grid, `<ResponsiveContainer height={360}>` left (`lg:col-span-7`), legend right (`lg:col-span-5`). Centre label is absolute-positioned over the donut showing `PORTFOLIO_TOTAL` + "Active listings". Tooltip is a small custom dark pill (`bg-ink text-paper`) showing `{country}` + `{count} properties · {percent}%`.
+
+### `/contact` (`app/contact/page.tsx`) — `"use client"`
+- Full-bleed background image (`next/image fill priority`) + dark `bg-gradient-to-br from-black/75 via-black/60 to-black/85` covering the entire viewport; `-mt-16` so it bleeds under the navbar
+- 12-col grid: heading column `lg:col-span-5` left, form column `lg:col-span-6 lg:col-start-7` (form starts further right with column 6 as a gutter)
+- **Heading column** (white on overlay): Overline + H1 "You Have Questions, We Have Answers" (`text-balance`) + supporting `<Body>`
+- **Form card** (`bg-white border p-10`): `H3 "Tell Us What You Need"` →
+  - First Name / Last Name (`grid-cols-1 md:grid-cols-2`)
+  - Country `<select>` (10 options) / Phone Number
+  - Email Address (full width)
+  - Type of Inquiry — radio pills: General, Book Property Tour, Sell House, Rent. Implemented as `<label><input type="radio" class="peer sr-only" /><span class="… peer-checked:bg-ink peer-checked:text-paper">…</span></label>` so the active state is **CSS-only** (no `useState` for the visual toggle)
+  - Message textarea (`rows={5}`, non-resizable)
+  - Footer row separated by `border-t`: opt-in checkbox (`accent-gold`, `sm:flex-1 sm:min-w-0` so the label grows into all available space) + dark "Send Message" submit button (`bg-ink hover:bg-gold`)
+- `onSubmit={(e) => e.preventDefault()}` — form is UI-only, no backend wiring
+
 ### Design system showcase (`app/design-system/page.tsx`)
 Showcase route for typography, buttons, and the legacy `PropertyCard`.
 
 ---
 
-## Shared Data (`app/data/properties.ts`)
+## Shared Data
 
-Single source of truth for property listings. Exports:
+### `app/data/properties.ts`
 - `PropertyStatus` — `"For Sale" | "To Rent" | "Off Market" | "New Listing" | "Under Offer"`
 - `PropertyType` — `"Villa" | "Apartment" | "Townhouse" | "Estate" | "Penthouse"`
 - `PropertyCountry` — `"Spain" | "England" | "France" | "Italy" | "Monaco"`
 - `Property` — `{ image, alt, status, name, location, country, type, price, beds, size }`
 - `PROPERTIES: Property[]` — 12 hardcoded listings spread across the 5 countries
 
-Consumers: `PropertiesSection` (slices the first 8), `/properties` (renders all 12). When adding properties keep at least one entry per country so the (future) location filter has something to match.
+Consumers: `PropertiesSection` (slices the first 8), `/properties` (all 12), `/locations/[slug]` (filters by country).
+
+### `app/data/regions.ts`
+- `Region` — `{ slug, name, country, image, alt, propertiesCount, tagline, about: [string, string], highlights: string[] }`
+- `REGIONS: Region[]` — 12 entries. The first 6 (Marbella, Mayfair, Côte d'Azur, Tuscany, Monte Carlo, The Cotswolds) match the original `PopularRegionsSection` order so the homepage section can `slice(0, 6)` without visual regression. `country` reuses `PropertyCountry` from `properties.ts`
+
+Consumers: `PopularRegionsSection` (first 6), `/locations` (all 12), `/locations/[slug]` (find by slug + sibling regions for the "Other destinations" footer).
+
+### `app/data/about.ts`
+- `Metric { value, label, caption? }` — `METRICS` has 4 entries
+- `PortfolioSlice { country, count }` — `PORTFOLIO_BY_COUNTRY` has 5 entries; also exports computed `PORTFOLIO_TOTAL`
+- `Leader { name, role, bio, image, alt }` — `LEADERSHIP` has 4 entries with verified Unsplash portraits
+- `Value { title, body }` — `VALUES` has 3 entries
+
+All numbers are static / illustrative — there is no CMS or live data layer.
 
 ---
 
@@ -303,3 +375,21 @@ Always use `next/image`. For full-bleed cards use the `fill` prop with `relative
 - Hero uses `-mt-16` to cancel `<main>`'s `pt-16`, letting it fill the full viewport behind the navbar
 - After killing/restarting the dev server, check for port 3000 conflicts: `lsof -ti :3000 | xargs kill -9`
 - Sections manage their own max-width (`max-w-7xl`) rather than using the `<Container>` primitive
+- `pnpm exec tsc --noEmit` emits one pre-existing error from `.next/dev/types/validator.ts` claiming `app/components/ui/layout.tsx` doesn't satisfy `LayoutConfig<"/components/ui">`. Next's validator is incorrectly treating that file as a route layout because of its name. It is harmless — ignore it. Any *additional* errors are real
+- Recharts colours: pass **hex strings** (e.g. `#B8985A`) to `<Cell fill>`, not `var(--color-…)`. Recharts forwards the value directly into the SVG `fill` attribute, which doesn't always resolve CSS custom properties cleanly
+- Unsplash photo IDs go stale silently — `next/image` will render a broken tile if the source 404s. Before committing a new image URL, verify with `curl -sS -o /dev/null -w "%{http_code}" "https://images.unsplash.com/photo-XXX?w=400"` — should return `200`
+- Dynamic route `params` is a `Promise` in Next 16 — `await params` before destructuring (or use `use(params)` inside a client component). See `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/dynamic-routes.md`
+
+---
+
+## Width-constraint anti-pattern
+
+**Don't add `max-w-*` to a text wrapper unless the parent is unbounded.** Inside a grid column or flex item, the parent already constrains width — adding a max only ever makes the child narrower, often causing headings to wrap one word per line or labels to cramp next to siblings.
+
+This bit us repeatedly on the About headings (`max-w-2xl` on H2 wrappers caused "one word per line" wrapping) and on the contact form opt-in (`max-w-md` on the `<label>` left no room for the text next to the submit button).
+
+Rules of thumb:
+- Inside a grid column or flex child → omit `max-w-*`. The column/flex track is the constraint.
+- Want a text block to grow into all remaining space in a flex row → use `flex-1 min-w-0` (not `max-w-md`).
+- Headings prone to awkward wraps → add `text-balance` rather than narrowing the wrapper.
+- Only apply `max-w-*` directly inside a wide section wrapper (e.g. `max-w-7xl mx-auto`) when you want a deliberate single-column reading width.
