@@ -29,7 +29,7 @@ Luxury real estate website built section by section. Brand name: **Meridian Esta
 app/
   globals.css                      # Design tokens + Tailwind theme
   layout.tsx                       # Root layout: fonts, Navbar, Footer, <main>
-  page.tsx                         # Homepage (composes sections)
+  page.tsx                         # Homepage (composes sections in order)
   design-system/page.tsx           # Design system showcase route
 
   components/
@@ -37,13 +37,21 @@ app/
       typography.tsx               # All text primitives
       button.tsx                   # Button component
       layout.tsx                   # Container, Section, Stack, Inline, Grid
-      property-card.tsx            # Standard property listing card
+      property-card.tsx            # Standard property listing card (unused in sections)
     layout/
       Navbar.tsx                   # Fixed, scroll-aware, transparent-on-hero
       Footer.tsx                   # 4-col grid, brand + link columns
     sections/
       HeroSection.tsx              # Full-viewport hero with search bar
       FeaturedPropertiesSection.tsx # Asymmetric 2×2 featured grid
+      PropertiesSection.tsx        # 4-col × 2-row browse grid + View More button
+      PopularRegionsSection.tsx    # 3-col × 2-row destination cards with overlay
+      BlogSection.tsx              # Journal: large post (left) + 3 horizontal posts (right)
+      TestimonialsSection.tsx      # Carousel: quote cards with portrait image + fade transition
+
+public/
+  images/
+    943fdb66-b5b4-49ff-876e-954fc9d03745.png  # B&W portrait — used in testimonials
 ```
 
 ---
@@ -172,21 +180,73 @@ Note: sections use `max-w-7xl` directly rather than `<Container>` so they can sp
 - Trust bar: "2,400+ Properties · 35 Years Experience · RICS Regulated"
 
 ### `FeaturedPropertiesSection` (`app/components/sections/FeaturedPropertiesSection.tsx`)
+- Background: `--color-paper`
 - Asymmetric CSS grid: `grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 md:h-[680px] gap-gutter`
 - Left card spans both rows (`md:row-span-2`), right cards half-height
 - `FeaturedCard` internal component: `next/image fill` + gradient overlay + hover zoom (`group-hover:scale-105`)
 - Tall (left) card shows specs grid above name/price; short cards show name/location/price only
 - Section header: Overline + H2 + "View all properties →" link (desktop only)
 
+### `PropertiesSection` (`app/components/sections/PropertiesSection.tsx`)
+- Background: `--color-paper-alt`
+- 8 properties in a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter` grid (2 rows on desktop)
+- Internal `PropertyCard`: image (`h-44`) with status badge overlay + hover zoom, then name, location, beds, size, price below
+- Status badges are colour-coded: gold for "New Instruction", white for "Off Market", dark for "For Sale"/"To Rent", muted for "Under Offer"
+- "View More Properties" `outline` button centred below grid — no action attached
+- Section header: Overline + H2 (left) + property count caption (right, desktop only)
+
+### `PopularRegionsSection` (`app/components/sections/PopularRegionsSection.tsx`)
+- Background: `--color-paper-alt`
+- 6 destination cards in `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 lg:h-[560px] gap-gutter`
+- Destinations: Marbella · Mayfair · Côte d'Azur · Tuscany · Monte Carlo · The Cotswolds
+- Each card: full-bleed `next/image fill` + bottom-heavy gradient overlay that deepens on hover, image zoom on hover
+- Overlay content: country + property count (caption), destination name (H3), ghost "Learn More" button (white border, fills white on hover)
+- Mobile: `h-[260px]` per card; desktop height set by container (`lg:h-[560px]`)
+- Section header: Overline + H2 (left) + "All locations →" link (right, desktop only)
+
+### `BlogSection` (`app/components/sections/BlogSection.tsx`)
+- Background: `--color-paper`
+- 2-column asymmetric grid: `grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-gutter`
+- Left column: `LargePostCard` spanning all 3 rows (`md:row-span-3`) — full-bleed image on top, white content panel below (title, excerpt, author/date/read time)
+- Right column: 3 `SmallPostCard`s stacked — fixed-width thumbnail (`w-36`) on left, Overline + H6 title + meta on right
+- Both card types: image zoom on hover, title transitions to gold on hover
+- Section header: Overline + H2 (left) + "All articles →" link (right, desktop only)
+- 4 posts with Unsplash images; categories: Market Insights, Interior Design, Country Estates, Buying Guide
+
+### `TestimonialsSection` (`app/components/sections/TestimonialsSection.tsx`) — `"use client"`
+- Background: `--color-paper-alt`
+- Carousel showing one testimonial at a time; 5 testimonials total
+- Card layout: image panel on the left (`md:w-72`, `object-cover object-top`) + quote panel on the right
+- Quote panel: gold SVG quotation mark, italic `font-display` quote text, name (H4), title (BodySmall), location (Caption)
+- Portrait image: `public/images/943fdb66-b5b4-49ff-876e-954fc9d03745.png` (B&W, used for all slides)
+- Fade transition: `setFading(true)` → 180ms timeout → swap index → `setFading(false)`; opacity driven by inline style
+- Controls: dash-style dot indicators (active dot widens to `2rem`) on left; prev/next chevron buttons on right
+- Section header: centred Overline + H2
+
+---
+
+## Homepage Section Order (`app/page.tsx`)
+
+1. `HeroSection`
+2. `FeaturedPropertiesSection`
+3. `PropertiesSection`
+4. `PopularRegionsSection`
+5. `BlogSection`
+6. `TestimonialsSection`
+
+Sections alternate between `--color-paper` and `--color-paper-alt` backgrounds for visual rhythm.
+
 ---
 
 ## Images
 
-All images from Unsplash. Remote pattern is whitelisted in `next.config.ts`:
+Remote Unsplash images are whitelisted in `next.config.ts`:
 ```ts
 images: { remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }] }
 ```
-Always use `next/image`. For full-bleed cards, use `fill` prop + `relative overflow-hidden` on the parent. **Restart the dev server after editing `next.config.ts`** — hot reload does not pick up config changes.
+Local images live in `public/images/` and are referenced as `/images/<filename>`.
+
+Always use `next/image`. For full-bleed cards use the `fill` prop with `relative overflow-hidden` on the parent and an appropriate `sizes` attribute. **Restart the dev server after editing `next.config.ts`** — hot reload does not pick up config changes.
 
 ---
 

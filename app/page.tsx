@@ -3,6 +3,7 @@ import { FeaturedPropertiesSection } from "@/app/components/sections/FeaturedPro
 import { PropertiesSection } from "@/app/components/sections/PropertiesSection"
 import { PopularRegionsSection } from "@/app/components/sections/PopularRegionsSection"
 import { BlogSection } from "@/app/components/sections/BlogSection"
+import { TestimonialsSection } from "@/app/components/sections/TestimonialsSection"
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <PropertiesSection />
       <PopularRegionsSection />
       <BlogSection />
+      <TestimonialsSection />
     </>
   )
 }
