@@ -137,7 +137,7 @@ export default async function RegionPage({
           ) : (
             <div className="border border-[var(--color-border)] bg-white p-card flex flex-col gap-3 max-w-xl">
               <BodySmall className="text-[var(--color-ink-muted)]">
-                No instructions are currently published for {region.name}.
+                No listings are currently published for {region.name}.
                 Off-market stock turns over quietly here — please register your
                 interest so we can be in touch when the right property surfaces.
               </BodySmall>

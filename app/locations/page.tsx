@@ -27,7 +27,7 @@ export default function LocationsPage() {
             <H1 className="text-white mb-5">Locations</H1>
             {/* <Body className="text-white/75">
               Twelve destinations across Britain and the Mediterranean where our
-              principals have worked for decades, each with a dedicated desk and
+              team has worked for decades, each with a dedicated desk and
               local counsel.
             </Body> */}
           </div>

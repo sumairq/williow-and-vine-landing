@@ -367,7 +367,7 @@ export default function DesignSystem() {
             <PropertyCard
               property={{
                 ref: "REF 2026-0057",
-                status: "New Instruction",
+                status: "New Listing",
                 name: "Ashwood Pavilion",
                 location: "Richmond Hill, Surrey",
                 description: "A modern masterwork of glass and reclaimed stone perched above the Thames, with unobstructed river views from every principal room.",

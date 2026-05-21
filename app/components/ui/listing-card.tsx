@@ -9,7 +9,7 @@ function cn(...classes: (string | undefined | null | false)[]) {
 const STATUS_COLOURS: Record<PropertyStatus, string> = {
   "For Sale":        "bg-[var(--color-ink)] text-[var(--color-paper)]",
   "To Rent":         "bg-[var(--color-ink)] text-[var(--color-paper)]",
-  "New Instruction": "bg-[var(--color-gold)] text-[var(--color-paper)]",
+  "New Listing": "bg-[var(--color-gold)] text-[var(--color-paper)]",
   "Off Market":      "bg-[var(--color-paper)] text-[var(--color-ink)]",
   "Under Offer":     "bg-[var(--color-paper-alt)] text-[var(--color-ink-muted)]",
 }

@@ -6,7 +6,7 @@ const LISTING_STATUSES = [
   "For Sale",
   "To Rent",
   "Off Market",
-  "New Instruction",
+  "New Listing",
   "Under Offer",
 ] as const
 

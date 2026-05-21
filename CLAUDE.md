@@ -250,7 +250,7 @@ Composes the homepage sections in the order listed below.
 ### `FiltersSidebar` (`app/properties/_components/FiltersSidebar.tsx`)
 - `<aside>` with `lg:sticky lg:top-24 lg:self-start`, `flex flex-col gap-8`
 - **Location** group: `Label` heading + native `<select>` (All countries + Spain/England/France/Italy/Monaco) + city `<input>`. Both inputs share `fieldClass`: `w-full bg-white border border-[var(--color-border)] px-4 py-3 text-sm`
-- **Listing** group (separated by `border-t pt-8`): `Label` heading, then two `CheckboxGroup`s — Property Type (Villa, Apartment, Townhouse, Estate, Penthouse) and Listing Status (For Sale, To Rent, Off Market, New Instruction, Under Offer)
+- **Listing** group (separated by `border-t pt-8`): `Label` heading, then two `CheckboxGroup`s — Property Type (Villa, Apartment, Townhouse, Estate, Penthouse) and Listing Status (For Sale, To Rent, Off Market, New Listing, Under Offer)
 - `CheckboxGroup` renders a `<fieldset>` with a `<legend>` styled like an Overline + stacked `<label>` rows. Native checkboxes use `accent-[var(--color-gold)]` for the check colour
 - Footer: text-only "Reset filters" `<button type="reset">` (no handler)
 
@@ -262,7 +262,7 @@ Showcase route for typography, buttons, and the legacy `PropertyCard`.
 ## Shared Data (`app/data/properties.ts`)
 
 Single source of truth for property listings. Exports:
-- `PropertyStatus` — `"For Sale" | "To Rent" | "Off Market" | "New Instruction" | "Under Offer"`
+- `PropertyStatus` — `"For Sale" | "To Rent" | "Off Market" | "New Listing" | "Under Offer"`
 - `PropertyType` — `"Villa" | "Apartment" | "Townhouse" | "Estate" | "Penthouse"`
 - `PropertyCountry` — `"Spain" | "England" | "France" | "Italy" | "Monaco"`
 - `Property` — `{ image, alt, status, name, location, country, type, price, beds, size }`

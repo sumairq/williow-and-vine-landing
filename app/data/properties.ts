@@ -2,7 +2,7 @@ export type PropertyStatus =
   | "For Sale"
   | "To Rent"
   | "Off Market"
-  | "New Instruction"
+  | "New Listing"
   | "Under Offer"
 
 export type PropertyType =
@@ -48,7 +48,7 @@ export const PROPERTIES: Property[] = [
   {
     image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=600&q=80",
     alt: "Traditional red-brick family home",
-    status: "New Instruction",
+    status: "New Listing",
     name: "Fairfax Manor",
     location: "Virginia Water, Surrey",
     country: "England",
@@ -108,7 +108,7 @@ export const PROPERTIES: Property[] = [
   {
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80",
     alt: "Modern villa with landscaped gardens",
-    status: "New Instruction",
+    status: "New Listing",
     name: "The Pavilion",
     location: "Weybridge, Surrey",
     country: "England",
@@ -168,7 +168,7 @@ export const PROPERTIES: Property[] = [
   {
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
     alt: "Harbour-facing apartment in Monte Carlo",
-    status: "New Instruction",
+    status: "New Listing",
     name: "Le Belvédère",
     location: "Monte Carlo",
     country: "Monaco",

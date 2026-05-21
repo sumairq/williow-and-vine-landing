@@ -59,7 +59,7 @@ export const REGIONS: Region[] = [
     tagline: "Belle-époque villas between Cannes and Cap Ferrat.",
     about: [
       "The stretch from Cannes east to the Italian border is still the deepest market for prime waterfront in continental Europe — belle-époque villas on Cap d'Antibes, contemporary builds above Èze, and a handful of palace-quarter apartments in Cannes.",
-      "We work closely with French notaires and tax counsel to make cross-border transactions straightforward for British and Middle-Eastern principals.",
+      "We work closely with French notaires and tax counsel to make cross-border transactions straightforward for British and Middle-Eastern clients.",
     ],
     highlights: [
       "Helicopter transfer from Nice to Monaco in seven minutes",
@@ -76,12 +76,12 @@ export const REGIONS: Region[] = [
     propertiesCount: 17,
     tagline: "Vineyards, restored borghi and Renaissance palazzi.",
     about: [
-      "Our Tuscan instructions concentrate on the Chianti Classico belt between Florence and Siena, the Val d'Orcia, and a small selection of restored palazzi inside the walls of Florence and Lucca.",
+      "Our Tuscan listings concentrate on the Chianti Classico belt between Florence and Siena, the Val d'Orcia, and a small selection of restored palazzi inside the walls of Florence and Lucca.",
       "Buyers typically come for working vineyards, multi-house borghi suitable for hospitality, or principal residences with significant land — and we maintain relationships with restoration architects across the region.",
     ],
     highlights: [
       "Working-vineyard expertise with three in-house oenologists",
-      "Florence airport one hour from most instructions",
+      "Florence airport one hour from most properties",
       "Heritage restoration grants assessed at viewing",
     ],
   },
@@ -113,7 +113,7 @@ export const REGIONS: Region[] = [
     tagline: "Honey-stone manors across north Oxfordshire and Gloucestershire.",
     about: [
       "The Cotswolds remain the most consistently sought-after country market within ninety minutes of central London, anchored by Daylesford, Chipping Norton and the Soho Farmhouse triangle.",
-      "Our instructions span listed manors, small country estates with arable land, and contemporary new-builds in honey-stone produced by a handful of trusted developers.",
+      "Our listings span listed manors, small country estates with arable land, and contemporary new-builds in honey-stone produced by a handful of trusted developers.",
     ],
     highlights: [
       "Eighty minutes by car from Notting Hill",
@@ -152,7 +152,7 @@ export const REGIONS: Region[] = [
       "We act for buyers across new-build, period mansion blocks and the small remaining freehold townhouse market in Walton Street and Pont Street.",
     ],
     highlights: [
-      "Twenty-four-hour concierge on every mansion-block instruction",
+      "Twenty-four-hour concierge on every mansion-block listing",
       "Direct access to Hyde Park and Harrods",
       "Strong rental yields for non-resident owners",
     ],
@@ -167,12 +167,12 @@ export const REGIONS: Region[] = [
     tagline: "Bastides, mas and lavender estates in the Luberon.",
     about: [
       "Our Provençal book is anchored in the Luberon triangle of Gordes, Ménerbes and Bonnieux, with secondary activity around Aix-en-Provence and the Alpilles north of Saint-Rémy.",
-      "Most instructions are working bastides or restored mas with olive groves; we maintain relationships with regional architects for renovation programmes and pool consents.",
+      "Most listings are working bastides or restored mas with olive groves; we maintain relationships with regional architects for renovation programmes and pool consents.",
     ],
     highlights: [
       "Marseille and Avignon both inside an hour",
       "Olive-grove and lavender consultancy in-house",
-      "Heritage architect introductions on every instruction",
+      "Heritage architect introductions on every property",
     ],
   },
   {
@@ -203,7 +203,7 @@ export const REGIONS: Region[] = [
     tagline: "Lakefront villas between Bellagio and Cernobbio.",
     about: [
       "Lake Como's prime stock sits on the western shore between Cernobbio and Tremezzo, with a smaller but rising market on the Bellagio peninsula and along the Lecco branch to the east.",
-      "Almost every instruction is a period villa with private mooring; we work with the Soprintendenza on consents and with a panel of restoration specialists across the lake.",
+      "Almost every listing is a period villa with private mooring; we work with the Soprintendenza on consents and with a panel of restoration specialists across the lake.",
     ],
     highlights: [
       "Milan Malpensa under an hour by car",
