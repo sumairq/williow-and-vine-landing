@@ -1,62 +1,13 @@
 import Image from "next/image"
 import { H2, H3, Overline, Caption } from "@/app/components/ui/typography"
-
-type Region = {
-  image: string
-  alt: string
-  country: string
-  name: string
-  properties: number
-}
-
-const REGIONS: Region[] = [
-  {
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
-    alt: "Luxury villa with pool in Marbella",
-    country: "Spain",
-    name: "Marbella",
-    properties: 38,
-  },
-  {
-    image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
-    alt: "Georgian townhouses in Mayfair London",
-    country: "England",
-    name: "Mayfair",
-    properties: 61,
-  },
-  {
-    image: "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&w=800&q=80",
-    alt: "Coastal view of the French Riviera",
-    country: "France",
-    name: "Côte d'Azur",
-    properties: 24,
-  },
-  {
-    image: "https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?auto=format&fit=crop&w=800&q=80",
-    alt: "Rolling hills and vineyards of Tuscany",
-    country: "Italy",
-    name: "Tuscany",
-    properties: 17,
-  },
-  {
-    image: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=800&q=80",
-    alt: "Monaco harbour and skyline",
-    country: "Monaco",
-    name: "Monte Carlo",
-    properties: 12,
-  },
-  {
-    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80",
-    alt: "Quintessential Cotswolds village",
-    country: "England",
-    name: "The Cotswolds",
-    properties: 45,
-  },
-]
+import { REGIONS, type Region } from "@/app/data/regions"
 
 function RegionCard({ region }: { region: Region }) {
   return (
-    <div className="relative overflow-hidden group cursor-pointer h-[260px] lg:h-auto">
+    <a
+      href={`/locations/${region.slug}`}
+      className="relative overflow-hidden group cursor-pointer h-[260px] lg:h-auto block"
+    >
 
       {/* Background image */}
       <Image
@@ -73,19 +24,21 @@ function RegionCard({ region }: { region: Region }) {
       {/* Content */}
       <div className="absolute bottom-0 left-0 right-0 p-6">
         <Caption className="text-white/55 block mb-1.5 tracking-widest uppercase text-[10px]">
-          {region.country} · {region.properties} properties
+          {region.country} · {region.propertiesCount} properties
         </Caption>
         <H3 className="text-white mb-5">{region.name}</H3>
-        <button className="font-sans text-[10px] font-semibold uppercase tracking-widest px-4 py-2 border border-white/50 text-white hover:bg-white hover:text-[var(--color-ink)] transition-colors duration-300 cursor-pointer">
+        <span className="font-sans text-[10px] font-semibold uppercase tracking-widest px-4 py-2 border border-white/50 text-white group-hover:bg-white group-hover:text-[var(--color-ink)] transition-colors duration-300 inline-block">
           Learn More
-        </button>
+        </span>
       </div>
 
-    </div>
+    </a>
   )
 }
 
 export function PopularRegionsSection() {
+  const featured = REGIONS.slice(0, 6)
+
   return (
     <section className="bg-[var(--color-paper-alt)] py-section">
       <div className="max-w-7xl mx-auto px-4 md:px-container">
@@ -106,8 +59,8 @@ export function PopularRegionsSection() {
 
         {/* 3-col × 2-row grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 lg:h-[560px] gap-gutter">
-          {REGIONS.map((region) => (
-            <RegionCard key={region.name} region={region} />
+          {featured.map((region) => (
+            <RegionCard key={region.slug} region={region} />
           ))}
         </div>
 
