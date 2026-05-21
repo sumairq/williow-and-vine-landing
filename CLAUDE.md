@@ -59,7 +59,7 @@ app/
     ui/
       typography.tsx               # All text primitives
       button.tsx                   # Button component
-      layout.tsx                   # Container, Section, Stack, Inline, Grid
+      layout-primitives.tsx        # Container, Section, Stack, Inline, Grid (NOT named layout.tsx — see Known Gotchas)
       property-card.tsx            # Specs-grid card with gradient placeholder (legacy, design-system only)
       listing-card.tsx             # Image-led listing card — shared by /properties, /locations/[slug], PropertiesSection
       region-card.tsx              # Destination card with image + gradient + Learn More — used by /locations + /locations/[slug] "Other destinations"
@@ -158,7 +158,7 @@ Image-led listing card used by `PropertiesSection`, the `/properties` page, and 
 ### `RegionCard` (`app/components/ui/region-card.tsx`)
 Destination card. Props: `region: Region` (from `@/app/data/regions`) + optional `className` to override the default `h-[260px] lg:h-[400px]` sizing. Structure: `<a href="/locations/{slug}">` wrapping `next/image fill` with hover zoom, bottom-heavy gradient overlay (deepens on hover), and a content stack of `Caption {country} · {count} properties` + `H3 {name}` + ghost "Learn More" pill that fills white on hover. Used on `/locations` index and the "Other destinations" footer of `/locations/[slug]`. `PopularRegionsSection` uses an *inline* copy of this design (slightly different sizing for its asymmetric grid) — keep both visually consistent if either is edited.
 
-### Layout primitives (`app/components/ui/layout.tsx`)
+### Layout primitives (`app/components/ui/layout-primitives.tsx`)
 - `Container`: `max-w-4xl mx-auto px-4 md:px-container w-full`
 - `Section`: `py-section`
 - `Stack`: `flex flex-col gap-stack`
@@ -375,7 +375,7 @@ Always use `next/image`. For full-bleed cards use the `fill` prop with `relative
 - Hero uses `-mt-16` to cancel `<main>`'s `pt-16`, letting it fill the full viewport behind the navbar
 - After killing/restarting the dev server, check for port 3000 conflicts: `lsof -ti :3000 | xargs kill -9`
 - Sections manage their own max-width (`max-w-7xl`) rather than using the `<Container>` primitive
-- `pnpm exec tsc --noEmit` emits one pre-existing error from `.next/dev/types/validator.ts` claiming `app/components/ui/layout.tsx` doesn't satisfy `LayoutConfig<"/components/ui">`. Next's validator is incorrectly treating that file as a route layout because of its name. It is harmless — ignore it. Any *additional* errors are real
+- **Never name a file `layout.tsx` anywhere under `app/`** unless you intend it as a route layout. The App Router scans the entire `app/` tree (yes, even `app/components/...`) and any `layout.tsx` it finds must export a default React component, or TypeScript build fails with `Type … does not satisfy the constraint 'LayoutConfig<…>'`. This is why our layout primitives module is `layout-primitives.tsx` — renaming was the fix, not adding a stub default export
 - Recharts colours: pass **hex strings** (e.g. `#B8985A`) to `<Cell fill>`, not `var(--color-…)`. Recharts forwards the value directly into the SVG `fill` attribute, which doesn't always resolve CSS custom properties cleanly
 - Unsplash photo IDs go stale silently — `next/image` will render a broken tile if the source 404s. Before committing a new image URL, verify with `curl -sS -o /dev/null -w "%{http_code}" "https://images.unsplash.com/photo-XXX?w=400"` — should return `200`
 - Dynamic route `params` is a `Promise` in Next 16 — `await params` before destructuring (or use `use(params)` inside a client component). See `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/dynamic-routes.md`

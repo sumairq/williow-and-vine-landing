@@ -4,7 +4,7 @@ import {
   BodyLarge, Body, BodySmall,
   Caption, Label, Overline,
 } from "@/app/components/ui/typography"
-import { Container, Section, Stack, Inline, Grid } from "@/app/components/ui/layout"
+import { Container, Section, Stack, Inline, Grid } from "@/app/components/ui/layout-primitives"
 import { Button } from "@/app/components/ui/button"
 import { PropertyCard } from "@/app/components/ui/property-card"
 
