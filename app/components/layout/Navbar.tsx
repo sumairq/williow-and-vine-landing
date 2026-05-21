@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Label } from "@/app/components/ui/typography"
-import { Button } from "@/app/components/ui/button"
 
 const NAV_LINKS = [
   { label: "Properties", href: "/properties" },
@@ -12,16 +11,40 @@ const NAV_LINKS = [
 ]
 
 export function Navbar() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen]       = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 20)
+    window.addEventListener("scroll", handler, { passive: true })
+    handler()
+    return () => window.removeEventListener("scroll", handler)
+  }, [])
+
+  const transparent = !scrolled && !open
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-paper)]/95 backdrop-blur-sm">
+    <header
+      className={[
+        "fixed top-0 left-0 right-0 z-50 transition-colors duration-300",
+        transparent
+          ? "bg-transparent border-b border-transparent"
+          : "bg-[var(--color-paper)]/95 backdrop-blur-sm border-b border-[var(--color-border)]",
+      ].join(" ")}
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-container h-16 flex items-center justify-between">
 
         {/* Logo */}
         <a href="/" className="flex items-center gap-3 shrink-0">
           <div className="w-4 h-4 border border-[var(--color-gold)] rotate-45" />
-          <Label className="text-[var(--color-ink)] text-sm tracking-[0.2em]">Meridian</Label>
+          <Label
+            className={[
+              "text-sm tracking-[0.2em] transition-colors",
+              transparent ? "text-white" : "text-[var(--color-ink)]",
+            ].join(" ")}
+          >
+            Meridian
+          </Label>
         </a>
 
         {/* Desktop nav */}
@@ -30,7 +53,12 @@ export function Navbar() {
             <a
               key={href}
               href={href}
-              className="font-sans text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-colors"
+              className={[
+                "font-sans text-sm transition-colors",
+                transparent
+                  ? "text-white/80 hover:text-white"
+                  : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]",
+              ].join(" ")}
             >
               {label}
             </a>
@@ -38,9 +66,17 @@ export function Navbar() {
         </nav>
 
         {/* Desktop CTA */}
-        <div className="hidden md:block">
-          <Button variant="outline" size="sm">Request Viewing</Button>
-        </div>
+        <a
+          href="/contact"
+          className={[
+            "hidden md:inline-block font-sans text-xs font-semibold uppercase tracking-widest px-4 py-2 border transition-colors",
+            transparent
+              ? "border-white/60 text-white hover:border-white hover:bg-white/10"
+              : "border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]",
+          ].join(" ")}
+        >
+          Request Viewing
+        </a>
 
         {/* Mobile hamburger */}
         <button
@@ -49,11 +85,17 @@ export function Navbar() {
           aria-label={open ? "Close menu" : "Open menu"}
         >
           <span
-            className="block h-px w-6 bg-[var(--color-ink)] transition-transform origin-center"
+            className={[
+              "block h-px w-6 transition-all origin-center",
+              transparent ? "bg-white" : "bg-[var(--color-ink)]",
+            ].join(" ")}
             style={open ? { transform: "translateY(4px) rotate(45deg)" } : undefined}
           />
           <span
-            className="block h-px w-6 bg-[var(--color-ink)] transition-transform origin-center"
+            className={[
+              "block h-px w-6 transition-all origin-center",
+              transparent ? "bg-white" : "bg-[var(--color-ink)]",
+            ].join(" ")}
             style={open ? { transform: "translateY(-4px) rotate(-45deg)" } : undefined}
           />
         </button>
@@ -74,9 +116,13 @@ export function Navbar() {
               </a>
             ))}
           </nav>
-          <Button variant="primary" size="md" className="w-full justify-center">
+          <a
+            href="/contact"
+            className="block w-full text-center font-sans text-sm font-semibold uppercase tracking-widest px-6 py-3 bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[#2E2D2A] transition-colors"
+            onClick={() => setOpen(false)}
+          >
             Request Viewing
-          </Button>
+          </a>
         </div>
       )}
     </header>
