@@ -25,7 +25,7 @@ const REGIONS: Region[] = [
     properties: 61,
   },
   {
-    image: "https://images.unsplash.com/photo-1533165083432-4b36783e23b2?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&w=800&q=80",
     alt: "Coastal view of the French Riviera",
     country: "France",
     name: "Côte d'Azur",

@@ -31,13 +31,21 @@ app/
   layout.tsx                       # Root layout: fonts, Navbar, Footer, <main>
   page.tsx                         # Homepage (composes sections in order)
   design-system/page.tsx           # Design system showcase route
+  properties/
+    page.tsx                       # /properties — sidebar filters + 3-col listing grid
+    _components/
+      FiltersSidebar.tsx           # Location + Listing filters (private to route)
+
+  data/
+    properties.ts                  # Shared Property type + PROPERTIES array (used by /properties and PropertiesSection)
 
   components/
     ui/
       typography.tsx               # All text primitives
       button.tsx                   # Button component
       layout.tsx                   # Container, Section, Stack, Inline, Grid
-      property-card.tsx            # Standard property listing card (unused in sections)
+      property-card.tsx            # Specs-grid card with gradient placeholder (unused in sections)
+      listing-card.tsx             # Image-led listing card — shared by /properties and PropertiesSection
     layout/
       Navbar.tsx                   # Fixed, scroll-aware, transparent-on-hero
       Footer.tsx                   # 4-col grid, brand + link columns
@@ -125,7 +133,10 @@ Sizes: `sm` (px-4 py-2 text-xs) · `md` (px-6 py-3 text-sm) · `lg` (px-8 py-4 t
 All: `font-sans font-semibold uppercase tracking-widest transition-colors`
 
 ### `PropertyCard` (`app/components/ui/property-card.tsx`)
-Standard listing card with gradient placeholder image. Props: `ref`, `status`, `name`, `location`, `description`, `price`, `specs[]`, `imageGradient?`. Uses `outline` button + `H3/H5/Body/Label/BodySmall`. **Not used in sections yet — sections use their own card components.**
+Specs-grid card with gradient placeholder image. Props: `ref`, `status`, `name`, `location`, `description`, `price`, `specs[]`, `imageGradient?`. Uses `outline` button + `H3/H5/Body/Label/BodySmall`. **Currently unused — kept around for the design-system showcase.** New listing pages should use `ListingCard` instead.
+
+### `ListingCard` (`app/components/ui/listing-card.tsx`)
+Image-led listing card used by both `PropertiesSection` and the `/properties` page. Props: `property: Property` (from `@/app/data/properties`). Structure: `next/image fill` thumbnail (`h-44`) with hover zoom + colour-coded status badge overlay, then `H5` name, location `Caption`, beds/size `Label`+`BodySmall` row, `H4` price. Status colours come from a local `STATUS_COLOURS` record keyed by `PropertyStatus`.
 
 ### Layout primitives (`app/components/ui/layout.tsx`)
 - `Container`: `max-w-4xl mx-auto px-4 md:px-container w-full`
@@ -189,9 +200,8 @@ Note: sections use `max-w-7xl` directly rather than `<Container>` so they can sp
 
 ### `PropertiesSection` (`app/components/sections/PropertiesSection.tsx`)
 - Background: `--color-paper-alt`
-- 8 properties in a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter` grid (2 rows on desktop)
-- Internal `PropertyCard`: image (`h-44`) with status badge overlay + hover zoom, then name, location, beds, size, price below
-- Status badges are colour-coded: gold for "New Instruction", white for "Off Market", dark for "For Sale"/"To Rent", muted for "Under Offer"
+- Shows the first 8 entries of `PROPERTIES` (from `@/app/data/properties`) in a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter` grid (2 rows on desktop)
+- Cards are rendered by the shared `<ListingCard>` component (`app/components/ui/listing-card.tsx`) — status colour map lives there
 - "View More Properties" `outline` button centred below grid — no action attached
 - Section header: Overline + H2 (left) + property count caption (right, desktop only)
 
@@ -222,6 +232,43 @@ Note: sections use `max-w-7xl` directly rather than `<Container>` so they can sp
 - Fade transition: `setFading(true)` → 180ms timeout → swap index → `setFading(false)`; opacity driven by inline style
 - Controls: dash-style dot indicators (active dot widens to `2rem`) on left; prev/next chevron buttons on right
 - Section header: centred Overline + H2
+
+---
+
+## Routes
+
+### Homepage (`app/page.tsx`)
+Composes the homepage sections in the order listed below.
+
+### `/properties` (`app/properties/page.tsx`)
+- Server component. Page background `--color-paper`
+- **Hero band** at the top: `relative -mt-16 flex items-end` to bleed behind the fixed navbar (mirrors `HeroSection`'s `-mt-16` trick). Unsplash `next/image fill` + dark `from-black/65 via-black/50 to-black/80` gradient. Content panel: `relative z-10 max-w-7xl mx-auto px-4 md:px-container pt-32 pb-16` with `Overline` (gold) + white `H1 "Properties"`. The band ends right above the content grid so the Location filter sits immediately below it
+- **Content** below: `max-w-7xl mx-auto px-4 md:px-container py-section` containing `grid grid-cols-1 lg:grid-cols-[18rem_1fr] gap-10 lg:gap-14` — left sidebar (`<FiltersSidebar>`), right content column
+- Right column: result-count `Caption` above a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter` grid of `<ListingCard>`s rendering the full `PROPERTIES` array
+- Filters are UI-only — controls render but don't filter the grid yet
+
+### `FiltersSidebar` (`app/properties/_components/FiltersSidebar.tsx`)
+- `<aside>` with `lg:sticky lg:top-24 lg:self-start`, `flex flex-col gap-8`
+- **Location** group: `Label` heading + native `<select>` (All countries + Spain/England/France/Italy/Monaco) + city `<input>`. Both inputs share `fieldClass`: `w-full bg-white border border-[var(--color-border)] px-4 py-3 text-sm`
+- **Listing** group (separated by `border-t pt-8`): `Label` heading, then two `CheckboxGroup`s — Property Type (Villa, Apartment, Townhouse, Estate, Penthouse) and Listing Status (For Sale, To Rent, Off Market, New Instruction, Under Offer)
+- `CheckboxGroup` renders a `<fieldset>` with a `<legend>` styled like an Overline + stacked `<label>` rows. Native checkboxes use `accent-[var(--color-gold)]` for the check colour
+- Footer: text-only "Reset filters" `<button type="reset">` (no handler)
+
+### Design system showcase (`app/design-system/page.tsx`)
+Showcase route for typography, buttons, and the legacy `PropertyCard`.
+
+---
+
+## Shared Data (`app/data/properties.ts`)
+
+Single source of truth for property listings. Exports:
+- `PropertyStatus` — `"For Sale" | "To Rent" | "Off Market" | "New Instruction" | "Under Offer"`
+- `PropertyType` — `"Villa" | "Apartment" | "Townhouse" | "Estate" | "Penthouse"`
+- `PropertyCountry` — `"Spain" | "England" | "France" | "Italy" | "Monaco"`
+- `Property` — `{ image, alt, status, name, location, country, type, price, beds, size }`
+- `PROPERTIES: Property[]` — 12 hardcoded listings spread across the 5 countries
+
+Consumers: `PropertiesSection` (slices the first 8), `/properties` (renders all 12). When adding properties keep at least one entry per country so the (future) location filter has something to match.
 
 ---
 
