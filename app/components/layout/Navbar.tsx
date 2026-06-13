@@ -75,7 +75,7 @@ export function Navbar() {
               : "border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]",
           ].join(" ")}
         >
-          Request Viewing
+          Book a Viewing
         </a>
 
         {/* Mobile hamburger */}
@@ -121,7 +121,7 @@ export function Navbar() {
             className="block w-full text-center font-sans text-sm font-semibold uppercase tracking-widest px-6 py-3 bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[#2E2D2A] transition-colors"
             onClick={() => setOpen(false)}
           >
-            Request Viewing
+            Book a Viewing
           </a>
         </div>
       )}
